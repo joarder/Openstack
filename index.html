@@ -1,36 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Openstack : OpenStack Folsom (with Quantum) Installation Guide" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Openstack by joarder</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Openstack</title>
   </head>
-
   <body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/joarder/Openstack">View on GitHub</a>
+      <header>
+        <h1>Openstack</h1>
+        <p>OpenStack Folsom (with Quantum) Installation Guide</p>
+      </header>
 
-          <h1 id="project_title">Openstack</h1>
-          <h2 id="project_tagline">OpenStack Folsom (with Quantum) Installation Guide</h2>
+      <div id="banner">
+        <span id="logo"></span>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/joarder/Openstack/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/joarder/Openstack/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
+        <a href="https://github.com/joarder/Openstack" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/joarder/Openstack/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/joarder/Openstack/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
         <h1>Controller Node Installation</h1>
 
 <h1>Network Node Installation</h1>
@@ -58,16 +66,13 @@ This package update is necessary if you want to use process network namespace in
 
 <p><strong>Install VLAN and Bridge utilities and configure NIC to support multiple networks</strong></p>
 
-<p><code>apt-get install -y vlan bridge-utils</code>
-<code>vi /etc/network/interfaces</code>  </p>
+<p><code>apt-get install -y vlan bridge-utils</code><br><code>vi /etc/network/interfaces</code>  </p>
 
-<p><code>#The loopback network interface</code>
-<code>auto lo</code><br><code>iface lo inet loopback</code>  </p>
+<p><code># The loopback network interface</code><br><code>auto lo</code><br><code>iface lo inet loopback</code>  </p>
 
-<p><code># Management Network</code>
-<code>auto eth0</code><br><code>iface eth0 inet static</code><br><code>address 192.168.0.11</code><br><code>netmask 255.255.255.224</code><br><code>gateway 192.168.0.1</code><br><code>dns-nameservers 130.194.1.99 130.194.7.99</code>  </p>
+<p><code># Management Network Connected to VLAN 10</code><br><code>auto eth0</code><br><code>iface eth0 inet static</code><br><code>address 192.168.0.11</code><br><code>netmask 255.255.255.224</code><br><code>gateway 192.168.0.1</code><br><code>dns-nameservers 130.194.1.99 130.194.7.99</code>  </p>
 
-<p><code># Data Network</code><br><code>auto eth0.101</code><br><code>iface eth0.101 inet static</code><br><code>vlan-raw-device eth0</code><br><code>address 10.0.0.11</code><br><code>netmask 255.255.255.0</code>  </p>
+<p><code># VM Configuration Network Connected to VLAN 101</code><br><code>auto eth0.101</code><br><code>iface eth0.101 inet static</code><br><code>vlan-raw-device eth0</code><br><code>address 10.0.0.11</code><br><code>netmask 255.255.255.0</code>  </p>
 
 <p><strong>Install and configure NTP</strong><br><code>apt-get install -y ntp</code><br><code>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</code><br><code>service ntp restart</code></p>
 
@@ -200,17 +205,12 @@ osapi_volume_listen_port=5900</p>
 <li><a href="https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/OpenStack_Folsom_Install_Guide_WebVersion.rst">Folsom + Quantum on GRE-Tunneling with 3 NIC</a></li>
 </ol>
       </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Openstack maintained by <a href="https://github.com/joarder">joarder</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/joarder">joarder</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
       </footer>
     </div>
-
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
-
   </body>
 </html>

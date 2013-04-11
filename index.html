@@ -90,6 +90,16 @@
 
 <p>sysctl -p</p>
 
+<blockquote>
+<p>export OS_TENANT_NAME=ADMIN
+export OS_USERNAME=admin
+export OS_PASSWORD=openstack
+export OS_AUTH_URL="<a href="http://192.168.0.9:5000/v2.0/">http://192.168.0.9:5000/v2.0/</a>"
+export OS_AUTH_STRATEGY=keystone
+export SERVICE_TOKEN=ADMIN
+export SERVICE_ENDPOINT=<a href="http://192.168.0.9:35357/v2.0/">http://192.168.0.9:35357/v2.0/</a></p>
+</blockquote>
+
 <h3>Reboot the system</h3>
 
 <p>It will be better to reboot the system at this point to make the effects into the configurations</p>
@@ -154,6 +164,7 @@ service libvirt-bin restart</p>
 
 <p>ovs-vsctl add-br br-int</p>
 
+<blockquote>
 <p>[DEFAULT]
 logdir=/var/log/nova
 state_path=/var/lib/nova
@@ -205,6 +216,7 @@ quantum_admin_auth_url=<a href="http://192.168.0.9:35357/v2.0">http://192.168.0.
 libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
 linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
 firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver</p>
+</blockquote>
 
 <h1>Compute</h1>
 

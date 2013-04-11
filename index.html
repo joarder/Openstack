@@ -39,61 +39,64 @@
 
 <h2>Install and configure common services</h2>
 
-<h3>Install telnet and SSH support for the compute node</h3>
+<p><strong>Install telnet and SSH support for the compute node</strong>
+<code>apt-get install telnet &amp;&amp; apt-get install openssh-server</code></p>
 
-<p>apt-get install telnet &amp;&amp; apt-get install openssh-server</p>
+<p><strong>Upload the latest iproute package and install it using dpkg</strong>
+This package update is necessary if you want to use process network namespace in future for your quantum configuration</p>
 
-<h3>Upload the latest iproute package and install it using dpkg</h3>
+<p><code>dpkg -i iproute_20121211-2_amd64.deb</code></p>
 
-<p>dpkg -i iproute_20121211-2_amd64.deb</p>
+<p><strong>Include Cloud Archives for Folsom in the system</strong>
+<code>apt-get install ubuntu-cloud-keyring</code></p>
 
-<h3>Include Cloud Archives for Folsom in the system</h3>
+<p><code>vi /etc/apt/sources.list.d/cloud-archive.list</code></p>
 
-<p>apt-get install ubuntu-cloud-keyring</p>
+<p><code>deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/folsom main</code></p>
 
-<p>vi /etc/apt/sources.list.d/cloud-archive.list</p>
+<p><strong>Update the system</strong>
+<code>apt-get update &amp;&amp; apt-get dist-upgrade &amp;&amp; apt-get upgrade</code></p>
 
-<p>deb <a href="http://ubuntu-cloud.archive.canonical.com/ubuntu">http://ubuntu-cloud.archive.canonical.com/ubuntu</a> precise-updates/folsom main</p>
+<p><strong>Install VLAN and Bridge utilities and configure NIC to support multiple networks</strong>
+<code>apt-get install -y vlan bridge-utils</code></p>
 
-<h3>Update the system</h3>
+<p><strong>Install and configure NTP</strong>
+<code>apt-get install -y ntp</code></p>
 
-<p>apt-get update &amp;&amp; apt-get dist-upgrade &amp;&amp; apt-get upgrade</p>
+<p><code>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</code></p>
 
-<h3>Install VLAN and Bridge utilities and configure NIC to support multiple networks</h3>
+<p><code>service ntp restart</code></p>
 
-<p>apt-get install -y vlan bridge-utils</p>
+<p><strong>Edit /etc/sysctl.conf</strong>
+<code>vi /etc/sysctl.conf</code></p>
 
-<h3>Install and configure NTP</h3>
+<p><code>net.ipv4.conf.all.rp_filter = 0</code></p>
 
-<p>apt-get install -y ntp</p>
+<p><code>net.ipv4.conf.default.rp_filter = 0</code></p>
 
-<p>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</p>
+<p><code>net.ipv4.ip_forward=1</code></p>
 
-<p>service ntp restart</p>
+<p><em>If you do not want to reboot the system then just type</em></p>
 
-<h3>Edit /etc/sysctl.conf</h3>
+<p><code>sysctl -p</code></p>
 
-<p>vi /etc/sysctl.conf</p>
+<p><strong>Add the below lines to your .bashrc file</strong> </p>
 
-<p>net.ipv4.conf.all.rp_filter = 0</p>
+<p><code>vi ~/.bashrc</code></p>
 
-<p>net.ipv4.conf.default.rp_filter = 0</p>
+<p><code>export OS_TENANT_NAME=ADMIN</code></p>
 
-<p>net.ipv4.ip_forward=1</p>
+<p><code>export OS_USERNAME=admin</code></p>
 
-<p>If you do not want to reboot the system then just type </p>
+<p><code>export OS_PASSWORD=openstack</code></p>
 
-<p>sysctl -p</p>
+<p><code>export OS_AUTH_URL="http://192.168.0.9:5000/v2.0/"</code></p>
 
-<blockquote>
-<p>export OS_TENANT_NAME=ADMIN
-export OS_USERNAME=admin
-export OS_PASSWORD=openstack
-export OS_AUTH_URL="<a href="http://192.168.0.9:5000/v2.0/">http://192.168.0.9:5000/v2.0/</a>"
-export OS_AUTH_STRATEGY=keystone
-export SERVICE_TOKEN=ADMIN
-export SERVICE_ENDPOINT=<a href="http://192.168.0.9:35357/v2.0/">http://192.168.0.9:35357/v2.0/</a></p>
-</blockquote>
+<p><code>export OS_AUTH_STRATEGY=keystone</code></p>
+
+<p><code>export SERVICE_TOKEN=ADMIN</code></p>
+
+<p><code>export SERVICE_ENDPOINT=http://192.168.0.9:35357/v2.0/</code></p>
 
 <h3>Reboot the system</h3>
 

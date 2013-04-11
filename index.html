@@ -1,51 +1,47 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Openstack : OpenStack Folsom (with Quantum) Installation Guide" />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-    <title>Openstack</title>
+    <title>Openstack by joarder</title>
   </head>
 
   <body>
+    <header>
+      <div class="inner">
+        <h1>Openstack</h1>
+        <h2>OpenStack Folsom (with Quantum) Installation Guide</h2>
+        <a href="https://github.com/joarder/Openstack" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/joarder/Openstack">View on GitHub</a>
-
-          <h1 id="project_title">Openstack</h1>
-          <h2 id="project_tagline">OpenStack Folsom (with Quantum) Installation Guide</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/joarder/Openstack/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/joarder/Openstack/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>Controller Node Installation</h1>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>Controller Node Installation</h1>
 
 <h1>Network Node Installation</h1>
 
 <h1>Compute Node Installation</h1>
 
-<h2>Install and configure common services</h2>
+<h3>Install and configure common services</h3>
 
 <p><strong>Install telnet and SSH support for the compute node</strong></p>
 
 <p><code>apt-get install telnet &amp;&amp; apt-get install openssh-server</code></p>
 
-<p><strong>Upload the latest iproute package and install it using dpkg</strong></p>
-
-<p>This package update is necessary if you want to use process network namespace in future for your quantum configuration</p>
+<p><strong>Upload the latest iproute package and install it using dpkg</strong><br>
+This package update is necessary if you want to use process network namespace in future for your quantum configuration</p>
 
 <p><code>dpkg -i iproute_20121211-2_amd64.deb</code></p>
 
@@ -63,21 +59,11 @@
 
 <p><strong>Install and configure NTP</strong></p>
 
-<p><code>apt-get install -y ntp</code></p>
-
-<p><code>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</code></p>
-
-<p><code>service ntp restart</code></p>
+<p><code>apt-get install -y ntp</code><br><code>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</code><br><code>service ntp restart</code></p>
 
 <p><strong>Edit /etc/sysctl.conf</strong></p>
 
-<p><code>vi /etc/sysctl.conf</code></p>
-
-<p><code>net.ipv4.conf.all.rp_filter = 0</code></p>
-
-<p><code>net.ipv4.conf.default.rp_filter = 0</code></p>
-
-<p><code>net.ipv4.ip_forward=1</code></p>
+<p><code>vi /etc/sysctl.conf</code><br><code>net.ipv4.conf.all.rp_filter = 0</code><br><code>net.ipv4.conf.default.rp_filter = 0</code><br><code>net.ipv4.ip_forward=1</code>  </p>
 
 <p><em>If you do not want to reboot the system then just type</em></p>
 
@@ -87,75 +73,43 @@
 
 <p><code>vi ~/.bashrc</code></p>
 
-<p><code>export OS_TENANT_NAME=ADMIN</code></p>
+<p><code>export OS_TENANT_NAME=ADMIN</code><br><code>export OS_USERNAME=admin</code><br><code>export OS_PASSWORD=openstack</code><br><code>export OS_AUTH_URL="http://192.168.0.9:5000/v2.0/"</code><br><code>export OS_AUTH_STRATEGY=keystone</code><br><code>export SERVICE_TOKEN=ADMIN</code><br><code>export SERVICE_ENDPOINT=http://192.168.0.9:35357/v2.0/</code></p>
 
-<p><code>export OS_USERNAME=admin</code></p>
-
-<p><code>export OS_PASSWORD=openstack</code></p>
-
-<p><code>export OS_AUTH_URL="http://192.168.0.9:5000/v2.0/"</code></p>
-
-<p><code>export OS_AUTH_STRATEGY=keystone</code></p>
-
-<p><code>export SERVICE_TOKEN=ADMIN</code></p>
-
-<p><code>export SERVICE_ENDPOINT=http://192.168.0.9:35357/v2.0/</code></p>
-
-<h3>Reboot the system</h3>
+<p><strong>Reboot the system</strong></p>
 
 <p>It will be better to reboot the system at this point to make the effects into the configurations</p>
 
-<p>reboot</p>
+<p><code>reboot</code></p>
 
-<h2>Install and configure KVM Hypervisor</h2>
+<h3>Install and configure KVM Hypervisor</h3>
 
-<h3>Install the packages that we need :</h3>
+<p><strong>Install the required packages</strong><br><code>apt-get install -y kvm libvirt-bin pm-utils</code></p>
 
-<p>apt-get install -y kvm libvirt-bin pm-utils</p>
-
-<h3>Configure libvirt:</h3>
+<p><strong>Configure libvirt</strong></p>
 
 <p>Edit /etc/libvirt/qemu.conf file and add :
-vi /etc/libvirt/qemu.conf
-cgroup_device_acl = [
-    "/dev/null", "/dev/full", "/dev/zero",
-    "/dev/random", "/dev/urandom",
-    "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
-    "/dev/rtc", "/dev/hpet", "/dev/net/tun"]</p>
+<code>vi /etc/libvirt/qemu.conf</code>
+<code>cgroup_device_acl = [</code>
+<code>"/dev/null", "/dev/full", "/dev/zero",</code><br><code>"/dev/random", "/dev/urandom",</code><br><code>"/dev/ptmx", "/dev/kvm", "/dev/kqemu",</code><br><code>"/dev/rtc", "/dev/hpet", "/dev/net/tun"]</code></p>
 
-<h3>Disable KVM default virtual bridge to avoid any confusion :</h3>
+<p><strong>Disable KVM default virtual bridge to avoid any confusion</strong>
+<code>virsh net-destroy default</code><br><code>virsh net-undefine default</code>  </p>
 
-<p>virsh net-destroy default</p>
+<p><strong>Allow Live Migrations</strong><br>
+Edit /etc/libvirt/libvirtd.conf file :
+<code>vi /etc/libvirt/libvirtd.conf</code><br><code>listen_tls = 0'  
+</code>listen_tcp = 1<code>
+</code>auth_tcp = "none"`  </p>
 
-<p>virsh net-undefine default</p>
+<p><strong>Modify libvirtd_opts variable in /etc/init/libvirt-bin.conf file</strong><br><code>vi /etc/init/libvirt-bin.conf</code> 
+<code>env libvirtd_opts="-d -l"</code></p>
 
-<h3>Allow Live Migrations:</h3>
+<p><strong>Edit /etc/default/libvirt-bin file</strong>
+<code>vi /etc/default/libvirt-bin</code><br><code>libvirtd_opts="-d -l"</code>  </p>
 
-<p>Edit /etc/libvirt/libvirtd.conf file :
-vi /etc/libvirt/libvirtd.conf</p>
+<p><strong>Restart libvirt</strong><br><code>service libvirt-bin restart</code></p>
 
-<p>listen_tls = 0</p>
-
-<p>listen_tcp = 1</p>
-
-<p>auth_tcp = "none" </p>
-
-<h3>Modify libvirtd_opts variable in /etc/init/libvirt-bin.conf file :</h3>
-
-<p>vi /etc/init/libvirt-bin.conf</p>
-
-<p>env libvirtd_opts="-d -l" </p>
-
-<h3>Edit /etc/default/libvirt-bin file :</h3>
-
-<p>vi /etc/default/libvirt-bin</p>
-
-<p>libvirtd_opts="-d -l"   </p>
-
-<p>Restart libvirt
-service libvirt-bin restart</p>
-
-<h2>Install and configure OpenVSwitch</h2>
+<h3>Install and configure OpenVSwitch</h3>
 
 <h3>Install the openVSwitch:</h3>
 
@@ -235,18 +189,25 @@ osapi_volume_listen_port=5900</p>
 <li><a href="http://docwiki.cisco.com/wiki/Cisco_OpenStack_Edition:_Folsom_Manual_Install">Cisco OpenStack Edition: Folsom Manual Install</a></li>
 <li><a href="https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/OpenStack_Folsom_Install_Guide_WebVersion.rst">Folsom + Quantum on GRE-Tunneling with 3 NIC</a></li>
 </ol>
-      </section>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/joarder/Openstack/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/joarder/Openstack/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/joarder/Openstack"></a> is maintained by <a href="https://github.com/joarder">joarder</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Openstack maintained by <a href="https://github.com/joarder">joarder</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
+  
   </body>
 </html>

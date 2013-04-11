@@ -36,38 +36,184 @@
         <span class="blc"></span><span class="trc"></span>
         </div>
         <article class="markdown-body">
-          <p>Test</p>
+          <h1>Controller Node Installation</h1>
+
+<h1>Network Node Installation</h1>
 
 <h1>Compute Node Installation</h1>
 
-<h2>Install telnet and SSH support for the compute node</h2>
+<h2>Install and configure common services</h2>
+
+<h3>Install telnet and SSH support for the compute node</h3>
 
 <p>apt-get install telnet &amp;&amp; apt-get install openssh-server</p>
 
-<h2>Upload the latest iproute package and install it using dpkg</h2>
+<h3>Upload the latest iproute package and install it using dpkg</h3>
 
 <p>dpkg -i iproute_20121211-2_amd64.deb</p>
 
-<h2>Include Cloud Archives for Folsom in the system</h2>
+<h3>Include Cloud Archives for Folsom in the system</h3>
 
 <p>apt-get install ubuntu-cloud-keyring</p>
 
-<p>vi /etc/apt/sources.list.d/cloud-archive.list
-deb <a href="http://ubuntu-cloud.archive.canonical.com/ubuntu">http://ubuntu-cloud.archive.canonical.com/ubuntu</a> precise-updates/folsom main</p>
+<p>vi /etc/apt/sources.list.d/cloud-archive.list</p>
 
-<h2>Update the system</h2>
+<p>deb <a href="http://ubuntu-cloud.archive.canonical.com/ubuntu">http://ubuntu-cloud.archive.canonical.com/ubuntu</a> precise-updates/folsom main</p>
+
+<h3>Update the system</h3>
 
 <p>apt-get update &amp;&amp; apt-get dist-upgrade &amp;&amp; apt-get upgrade</p>
 
-<h2>Install VLAN and Bridge utilities and configure NIC to support multiple networks</h2>
+<h3>Install VLAN and Bridge utilities and configure NIC to support multiple networks</h3>
 
 <p>apt-get install -y vlan bridge-utils</p>
 
-<h2>Install and configure NTP</h2>
+<h3>Install and configure NTP</h3>
 
-<p>apt-get install -y ntp
-sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf
-service ntp restart</p>
+<p>apt-get install -y ntp</p>
+
+<p>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</p>
+
+<p>service ntp restart</p>
+
+<h3>Edit /etc/sysctl.conf</h3>
+
+<p>vi /etc/sysctl.conf</p>
+
+<p>net.ipv4.conf.all.rp_filter = 0</p>
+
+<p>net.ipv4.conf.default.rp_filter = 0</p>
+
+<p>net.ipv4.ip_forward=1</p>
+
+<p>If you do not want to reboot the system then just type </p>
+
+<p>sysctl -p</p>
+
+<h3>Reboot the system</h3>
+
+<p>It will be better to reboot the system at this point to make the effects into the configurations</p>
+
+<p>reboot</p>
+
+<h2>Install and configure KVM Hypervisor</h2>
+
+<h3>Install the packages that we need :</h3>
+
+<p>apt-get install -y kvm libvirt-bin pm-utils</p>
+
+<h3>Configure libvirt:</h3>
+
+<p>Edit /etc/libvirt/qemu.conf file and add :
+vi /etc/libvirt/qemu.conf
+cgroup_device_acl = [
+    "/dev/null", "/dev/full", "/dev/zero",
+    "/dev/random", "/dev/urandom",
+    "/dev/ptmx", "/dev/kvm", "/dev/kqemu",
+    "/dev/rtc", "/dev/hpet", "/dev/net/tun"]</p>
+
+<h3>Disable KVM default virtual bridge to avoid any confusion :</h3>
+
+<p>virsh net-destroy default</p>
+
+<p>virsh net-undefine default</p>
+
+<h3>Allow Live Migrations:</h3>
+
+<p>Edit /etc/libvirt/libvirtd.conf file :
+vi /etc/libvirt/libvirtd.conf</p>
+
+<p>listen_tls = 0</p>
+
+<p>listen_tcp = 1</p>
+
+<p>auth_tcp = "none" </p>
+
+<h3>Modify libvirtd_opts variable in /etc/init/libvirt-bin.conf file :</h3>
+
+<p>vi /etc/init/libvirt-bin.conf</p>
+
+<p>env libvirtd_opts="-d -l" </p>
+
+<h3>Edit /etc/default/libvirt-bin file :</h3>
+
+<p>vi /etc/default/libvirt-bin</p>
+
+<p>libvirtd_opts="-d -l"   </p>
+
+<p>Restart libvirt
+service libvirt-bin restart</p>
+
+<h2>Install and configure OpenVSwitch</h2>
+
+<h3>Install the openVSwitch:</h3>
+
+<p>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</p>
+
+<h3>Create the bridges (br-int will be used for VM integration):</h3>
+
+<p>ovs-vsctl add-br br-int</p>
+
+<p>[DEFAULT]
+logdir=/var/log/nova
+state_path=/var/lib/nova
+lock_path=/run/lock/nova
+verbose=True
+api_paste_config=/etc/nova/api-paste.ini
+scheduler_driver=nova.scheduler.simple.SimpleScheduler
+s3_host=192.168.0.9
+ec2_host=192.168.0.9
+ec2_dmz_host=192.168.0.9
+rabbit_host=192.168.0.9
+cc_host=192.168.0.9
+dmz_cidr=169.254.169.254/32
+metadata_host=192.168.0.9
+metadata_listen=0.0.0.0
+nova_url=<a href="http://192.168.0.9:8774/v1.1/">http://192.168.0.9:8774/v1.1/</a>
+sql_connection=mysql://nova:openstack@192.168.0.9/nova
+ec2_url=<a href="http://192.168.0.9:8773/services/Cloud">http://192.168.0.9:8773/services/Cloud</a>
+root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf</p>
+
+<h1>Auth</h1>
+
+<p>use_deprecated_auth=false
+auth_strategy=keystone
+keystone_ec2_url=<a href="http://192.168.0.9:5000/v2.0/ec2tokens">http://192.168.0.9:5000/v2.0/ec2tokens</a></p>
+
+<h1>Imaging service</h1>
+
+<p>glance_api_servers=192.168.0.9:9292
+image_service=nova.image.glance.GlanceImageService</p>
+
+<h1>Vnc configuration</h1>
+
+<p>novnc_enabled=true
+novncproxy_base_url=<a href="http://192.168.0.130:6080/vnc_auto.html">http://192.168.0.130:6080/vnc_auto.html</a>
+novncproxy_port=6080
+vncserver_proxyclient_address=192.168.0.13
+vncserver_listen=0.0.0.0</p>
+
+<h1>Network settings</h1>
+
+<p>network_api_class=nova.network.quantumv2.api.API
+quantum_url=<a href="http://192.168.0.9:9696">http://192.168.0.9:9696</a>
+quantum_auth_strategy=keystone
+quantum_admin_tenant_name=service
+quantum_admin_username=quantum
+quantum_admin_password=openstack
+quantum_admin_auth_url=<a href="http://192.168.0.9:35357/v2.0">http://192.168.0.9:35357/v2.0</a>
+libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
+linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver
+firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver</p>
+
+<h1>Compute</h1>
+
+<p>compute_driver=libvirt.LibvirtDriver</p>
+
+<h1>Cinder</h1>
+
+<p>volume_api_class=nova.volume.cinder.API
+osapi_volume_listen_port=5900</p>
 
 <h1>Credits:</h1>
 

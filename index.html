@@ -118,9 +118,7 @@ Edit /etc/libvirt/qemu.conf file and add :<br><code>vi /etc/libvirt/qemu.conf</c
 <p><strong>Disable KVM default virtual bridge to avoid any confusion</strong><br><code>virsh net-destroy default</code><br><code>virsh net-undefine default</code>  </p>
 
 <p><strong>Allow Live Migrations</strong><br>
-Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</code><br><code>listen_tls = 0'  
-</code>listen_tcp = 1<code>
-</code>auth_tcp = "none"`  </p>
+Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</code><br><code>listen_tls = 0</code><br><code>listen_tcp = 1</code><br><code>auth_tcp = "none"</code>  </p>
 
 <p><strong>Modify libvirtd_opts variable in /etc/init/libvirt-bin.conf file</strong><br><code>vi /etc/init/libvirt-bin.conf</code><br><code>env libvirtd_opts="-d -l"</code>  </p>
 

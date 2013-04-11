@@ -1,37 +1,34 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Openstack : OpenStack Folsom (with Quantum) Installation Guide" />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-    <title>Openstack</title>
+    <title>Openstack by joarder</title>
   </head>
 
   <body>
+    <header>
+      <div class="inner">
+        <h1>Openstack</h1>
+        <h2>OpenStack Folsom (with Quantum) Installation Guide</h2>
+        <a href="https://github.com/joarder/Openstack" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/joarder/Openstack">View on GitHub</a>
-
-          <h1 id="project_title">Openstack</h1>
-          <h2 id="project_tagline">OpenStack Folsom (with Quantum) Installation Guide</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/joarder/Openstack/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/joarder/Openstack/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>Controller Node Installation</h1>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>Controller Node Installation</h1>
 
 <h1>Network Node Installation</h1>
 
@@ -39,36 +36,43 @@
 
 <h2>Install and configure common services</h2>
 
-<p><strong>Install telnet and SSH support for the compute node</strong>
-<code>apt-get install telnet &amp;&amp; apt-get install openssh-server</code></p>
+<p><strong>Install telnet and SSH support for the compute node</strong></p>
 
-<p><strong>Upload the latest iproute package and install it using dpkg</strong>
-This package update is necessary if you want to use process network namespace in future for your quantum configuration</p>
+<p><code>apt-get install telnet &amp;&amp; apt-get install openssh-server</code></p>
+
+<p><strong>Upload the latest iproute package and install it using dpkg</strong></p>
+
+<p>This package update is necessary if you want to use process network namespace in future for your quantum configuration</p>
 
 <p><code>dpkg -i iproute_20121211-2_amd64.deb</code></p>
 
-<p><strong>Include Cloud Archives for Folsom in the system</strong>
-<code>apt-get install ubuntu-cloud-keyring</code></p>
+<p><strong>Include Cloud Archives for Folsom in the system</strong></p>
+
+<p><code>apt-get install ubuntu-cloud-keyring</code></p>
 
 <p><code>vi /etc/apt/sources.list.d/cloud-archive.list</code></p>
 
 <p><code>deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/folsom main</code></p>
 
-<p><strong>Update the system</strong>
-<code>apt-get update &amp;&amp; apt-get dist-upgrade &amp;&amp; apt-get upgrade</code></p>
+<p><strong>Update the system</strong></p>
 
-<p><strong>Install VLAN and Bridge utilities and configure NIC to support multiple networks</strong>
-<code>apt-get install -y vlan bridge-utils</code></p>
+<p><code>apt-get update &amp;&amp; apt-get dist-upgrade &amp;&amp; apt-get upgrade</code></p>
 
-<p><strong>Install and configure NTP</strong>
-<code>apt-get install -y ntp</code></p>
+<p><strong>Install VLAN and Bridge utilities and configure NIC to support multiple networks</strong></p>
+
+<p><code>apt-get install -y vlan bridge-utils</code></p>
+
+<p><strong>Install and configure NTP</strong></p>
+
+<p><code>apt-get install -y ntp</code></p>
 
 <p><code>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</code></p>
 
 <p><code>service ntp restart</code></p>
 
-<p><strong>Edit /etc/sysctl.conf</strong>
-<code>vi /etc/sysctl.conf</code></p>
+<p><strong>Edit /etc/sysctl.conf</strong></p>
+
+<p><code>vi /etc/sysctl.conf</code></p>
 
 <p><code>net.ipv4.conf.all.rp_filter = 0</code></p>
 
@@ -232,18 +236,25 @@ osapi_volume_listen_port=5900</p>
 <li><a href="http://docwiki.cisco.com/wiki/Cisco_OpenStack_Edition:_Folsom_Manual_Install">Cisco OpenStack Edition: Folsom Manual Install</a></li>
 <li><a href="https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/OpenStack_Folsom_Install_Guide_WebVersion.rst">Folsom + Quantum on GRE-Tunneling with 3 NIC</a></li>
 </ol>
-      </section>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/joarder/Openstack/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/joarder/Openstack/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/joarder/Openstack"></a> is maintained by <a href="https://github.com/joarder">joarder</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Openstack maintained by <a href="https://github.com/joarder">joarder</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
+  
   </body>
 </html>

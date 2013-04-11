@@ -41,6 +41,18 @@
       <section>
         <h1>Controller Node Installation</h1>
 
+<h2>MySQL Database configurations</h2>
+
+<p><code>mysql -u root -p</code><br><code>CREATE DATABASE keystone;</code><br><code>GRANT ALL ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON keystone.* TO 'keystone'@'192.168.0.9' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON keystone.* TO 'keystone'@'controller1-01' IDENTIFIED BY 'openstack';</code>  </p>
+
+<p><code>CREATE DATABASE glance;</code><br><code>GRANT ALL ON glance.* TO 'glance'@'%' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON glance.* TO 'glance'@'192.168.0.9' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON glance.* TO 'glance'@'controller1-01' IDENTIFIED BY 'openstack';</code>  </p>
+
+<p><code>CREATE DATABASE cinder;</code><br><code>GRANT ALL ON cinder.* TO 'cinder'@'%' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON cinder.* TO 'cinder'@'localhost' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON cinder.* TO 'cinder'@'192.168.0.9' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON cinder.* TO 'cinder'@'controller1-01' IDENTIFIED BY 'openstack';</code>  </p>
+
+<p><code>CREATE DATABASE quantum;</code><br><code>GRANT ALL ON quantum.* TO 'quantum'@'%' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON quantum.* TO 'quantum'@'localhost' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON quantum.* TO 'quantum'@'192.168.0.9' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON quantum.* TO 'quantum'@'controller1-01' IDENTIFIED BY 'openstack';</code>  </p>
+
+<p><code>CREATE DATABASE nova;</code><br><code>GRANT ALL ON nova.* TO 'nova'@'%' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON nova.* TO 'nova'@'192.168.0.9' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON nova.* TO 'nova'@'controller1-01' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON nova.* TO 'nova'@'192.168.0.11' IDENTIFIED BY 'openstack';</code><br><code>GRANT ALL ON nova.* TO 'nova'@'cn1-01' IDENTIFIED BY 'openstack';</code>  </p>
+
 <h1>Network Node Installation</h1>
 
 <h1>Compute Node Installation</h1>
@@ -70,9 +82,9 @@ This package update is necessary if you want to use process network namespace in
 
 <p><code># The loopback network interface</code><br><code>auto lo</code><br><code>iface lo inet loopback</code>  </p>
 
-<p><code># Management Network Connected to VLAN 10</code><br><code>auto eth0</code><br><code>iface eth0 inet static</code><br><code>address 192.168.0.11</code><br><code>netmask 255.255.255.224</code><br><code>gateway 192.168.0.1</code><br><code>dns-nameservers 130.194.1.99 130.194.7.99</code>  </p>
+<p><code># Management Network Connected to VLAN 10</code><br><code>auto eth0</code><br><code>iface eth0 inet static</code><br><code>address 192.168.0.11</code><br><code>netmask 255.255.255.224</code><br><code>gateway 192.168.0.1</code><br><code>dns-nameservers 4.2.2.1 4.2.2.2</code>  </p>
 
-<p><code># VM Configuration Network Connected to VLAN 101</code><br><code>auto eth0.101</code><br><code>iface eth0.101 inet static</code><br><code>vlan-raw-device eth0</code><br><code>address 10.0.0.11</code><br><code>netmask 255.255.255.0</code>  </p>
+<p><code># VM Configuration Network (Connected to VLAN 101)</code><br><code>auto eth0.101</code><br><code>iface eth0.101 inet static</code><br><code>vlan-raw-device eth0</code><br><code>address 10.0.0.11</code><br><code>netmask 255.255.255.0</code>  </p>
 
 <p><strong>Install and configure NTP</strong><br><code>apt-get install -y ntp</code><br><code>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</code><br><code>service ntp restart</code></p>
 

@@ -110,9 +110,11 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <h3>Install and configure OpenVSwitch</h3>
 
-<hr><p><strong>Install the openVSwitch</strong><br><code>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</code>  </p>
+<hr><p><strong>Install the openVSwitch</strong>
+<code>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</code>  </p>
 
-<p><strong>Create the bridges (br-int will be used for VM integration)</strong><br><code>ovs-vsctl add-br br-int</code>  </p>
+<p><strong>Create the bridges (br-int will be used for VM integration)</strong>
+<code>ovs-vsctl add-br br-int</code>  </p>
 
 <h3>Install the Quantum OpenVSwitch agent</h3>
 
@@ -124,23 +126,19 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <p><code>#Under the OVS section</code><br><code>[OVS]</code><br><code>tenant_network_type = gre</code><br><code>tunnel_id_ranges = 1:1000</code><br><code>integration_bridge = br-int</code><br><code>tunnel_bridge = br-tun</code><br><code>local_ip = 10.0.0.11</code><br><code>enable_tunneling = True</code>  </p>
 
-<p><strong>Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node:</strong><br><code>vi /etc/quantum/quantum.conf</code><br><code>rabbit_host = 10.0.0.11</code>  </p>
+<p><strong>Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node:</strong>
+<code>vi /etc/quantum/quantum.conf</code><br><code>rabbit_host = 10.0.0.11</code>  </p>
 
-<p><strong>Restart all the services:</strong><br><code>service quantum-plugin-openvswitch-agent restart</code>  </p>
+<p><strong>Restart all the services:</strong>
+<code>service quantum-plugin-openvswitch-agent restart</code>  </p>
 
 <h3>Install and configure Nova services</h3>
 
-<hr><p><strong>Install the required packages:</strong><br><code>apt-get install nova-compute-kvm</code>  </p>
+<hr><p><strong>Install the required packages:</strong>
+<code>apt-get install nova-compute-kvm</code>  </p>
 
-<p><strong>Now modify authtoken section in the /etc/nova/api-paste.ini file to this:</strong><br><code>vi /etc/nova/api-paste.ini</code><br><code>[filter:authtoken]</code>
-<code>paste.filter_factory = keystone.middleware.auth_token:filter_factory</code>
-<code>auth_host = 192.168.0.9</code>
-<code>auth_port = 35357</code>
-<code>auth_protocol = http</code>
-<code>admin_tenant_name = service</code>
-<code>admin_user = nova</code>
-<code>admin_password = openstack</code>
-<code>signing_dirname = /tmp/keystone-signing-nova</code></p>
+<p><strong>Now modify authtoken section in the /etc/nova/api-paste.ini file to this:</strong>
+<code>vi /etc/nova/api-paste.ini</code><br><code>[filter:authtoken]</code><br><code>paste.filter_factory = keystone.middleware.auth_token:filter_factory</code><br><code>auth_host = 192.168.0.9</code><br><code>auth_port = 35357</code><br><code>auth_protocol = http</code><br><code>admin_tenant_name = service</code><br><code>admin_user = nova</code><br><code>admin_password = openstack</code><br><code>signing_dirname = /tmp/keystone-signing-nova</code>  </p>
 
 <p><strong>Edit /etc/nova/nova-compute.conf file</strong><br><code>vi /etc/nova/nova-compute.conf</code><br><code>[DEFAULT]</code><br><code>libvirt_type=kvm</code><br><code>libvirt_ovs_bridge=br-int</code><br><code>libvirt_vif_type=ethernet</code><br><code>libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver</code><br><code>libvirt_use_virtio_for_bridges=True</code>  </p>
 

@@ -4,31 +4,40 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Openstack by joarder</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
   <body>
-    <div class="wrapper">
+
       <header>
-        <h1 class="header">Openstack</h1>
-        <p class="header">OpenStack Folsom (with Quantum) Installation Guide</p>
-
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/joarder/Openstack/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/joarder/Openstack/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/joarder/Openstack">View On GitHub</a></li>
-        </ul>
-
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/joarder">joarder</a></p>
-
-
+        <h1>Openstack</h1>
+        <p>OpenStack Folsom (with Quantum) Installation Guide</p>
       </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/joarder/Openstack" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/joarder/Openstack/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/joarder/Openstack/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
       <section>
         <h1>Controller Node Installation</h1>
 
@@ -110,41 +119,42 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <h3>Install and configure OpenVSwitch</h3>
 
-<hr><p><strong>Install the openVSwitch</strong>
-<code>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</code>  </p>
+<hr><p><strong>Install the openVSwitch</strong><br><code>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</code>  </p>
 
-<p><strong>Create the bridges (br-int will be used for VM integration)</strong>
-<code>ovs-vsctl add-br br-int</code>  </p>
+<p><strong>Create the bridges (br-int will be used for VM integration)</strong><br><code>ovs-vsctl add-br br-int</code>  </p>
 
 <h3>Install the Quantum OpenVSwitch agent</h3>
 
 <p><strong>Install the required packages</strong><br><code>apt-get -y install quantum-plugin-openvswitch-agent</code>  </p>
 
-<p><strong>Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:</strong></p>
+<p><strong>Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:</strong>
+<code>vi /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini</code>  </p>
 
-<p><code>vi /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini</code><br><code>#Under the database section</code><br><code>[DATABASE]</code><br><code>sql_connection = mysql://quantum:openstack@192.168.0.9/quantum</code>  </p>
+<p><code>#Under the database section</code><br><code>[DATABASE]</code><br><code>sql_connection = mysql://quantum:openstack@192.168.0.9/quantum</code>  </p>
 
 <p><code>#Under the OVS section</code><br><code>[OVS]</code><br><code>tenant_network_type = gre</code><br><code>tunnel_id_ranges = 1:1000</code><br><code>integration_bridge = br-int</code><br><code>tunnel_bridge = br-tun</code><br><code>local_ip = 10.0.0.11</code><br><code>enable_tunneling = True</code>  </p>
 
-<p><strong>Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node:</strong>
-<code>vi /etc/quantum/quantum.conf</code><br><code>rabbit_host = 10.0.0.11</code>  </p>
+<p><strong>Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node:</strong><br><code>vi /etc/quantum/quantum.conf</code><br><code>rabbit_host = 10.0.0.11</code>  </p>
 
-<p><strong>Restart all the services:</strong>
-<code>service quantum-plugin-openvswitch-agent restart</code>  </p>
+<p><strong>Restart all the services:</strong><br><code>service quantum-plugin-openvswitch-agent restart</code>  </p>
 
 <h3>Install and configure Nova services</h3>
 
-<hr><p><strong>Install the required packages:</strong>
-<code>apt-get install nova-compute-kvm</code>  </p>
+<hr><p><strong>Install the required packages:</strong><br><code>apt-get install nova-compute-kvm</code>  </p>
 
-<p><strong>Now modify authtoken section in the /etc/nova/api-paste.ini file to this:</strong>
-<code>vi /etc/nova/api-paste.ini</code><br><code>[filter:authtoken]</code><br><code>paste.filter_factory = keystone.middleware.auth_token:filter_factory</code><br><code>auth_host = 192.168.0.9</code><br><code>auth_port = 35357</code><br><code>auth_protocol = http</code><br><code>admin_tenant_name = service</code><br><code>admin_user = nova</code><br><code>admin_password = openstack</code><br><code>signing_dirname = /tmp/keystone-signing-nova</code>  </p>
+<p><strong>Now modify authtoken section in the /etc/nova/api-paste.ini file to this:</strong><br><code>vi /etc/nova/api-paste.ini</code>  </p>
+
+<p><code>[filter:authtoken]</code><br><code>paste.filter_factory = keystone.middleware.auth_token:filter_factory</code><br><code>auth_host = 192.168.0.9</code><br><code>auth_port = 35357</code><br><code>auth_protocol = http</code><br><code>admin_tenant_name = service</code><br><code>admin_user = nova</code><br><code>admin_password = openstack</code><br><code>signing_dirname = /tmp/keystone-signing-nova</code>  </p>
 
 <p><strong>Edit /etc/nova/nova-compute.conf file</strong><br><code>vi /etc/nova/nova-compute.conf</code><br><code>[DEFAULT]</code><br><code>libvirt_type=kvm</code><br><code>libvirt_ovs_bridge=br-int</code><br><code>libvirt_vif_type=ethernet</code><br><code>libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver</code><br><code>libvirt_use_virtio_for_bridges=True</code>  </p>
 
 <p><strong>Modify the /etc/nova/nova.conf like this:</strong><br><code>vi /etc/nova/nova.conf</code>  </p>
 
 <p><code>[DEFAULT]</code><br><code>logdir=/var/log/nova</code><br><code>state_path=/var/lib/nova</code><br><code>lock_path=/run/lock/nova</code><br><code>verbose=True</code><br><code>api_paste_config=/etc/nova/api-paste.ini</code><br><code>scheduler_driver=nova.scheduler.simple.SimpleScheduler</code><br><code>s3_host=192.168.0.9</code><br><code>ec2_host=192.168.0.9</code><br><code>ec2_dmz_host=192.168.0.9</code><br><code>rabbit_host=192.168.0.9</code><br><code>cc_host=192.168.0.9</code><br><code>dmz_cidr=169.254.169.254/32</code><br><code>metadata_host=192.168.0.9</code><br><code>metadata_listen=0.0.0.0</code><br><code>nova_url=http://192.168.0.9:8774/v1.1/</code><br><code>sql_connection=mysql://nova:openstack@192.168.0.9/nova</code><br><code>ec2_url=http://192.168.0.9:8773/services/Cloud</code><br><code>root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf</code><br><code># Authentication</code><br><code>use_deprecated_auth=false</code><br><code>auth_strategy=keystone</code><br><code>keystone_ec2_url=http://192.168.0.9:5000/v2.0/ec2tokens</code><br><code># Imaging service</code><br><code>glance_api_servers=192.168.0.9:9292</code><br><code>image_service=nova.image.glance.GlanceImageService</code><br><code># VNC configuration</code><br><code>novnc_enabled=true</code><br><code>novncproxy_base_url=http://192.168.0.130:6080/vnc_auto.html</code><br><code>novncproxy_port=6080</code><br><code>vncserver_proxyclient_address=192.168.0.11</code><br><code>vncserver_listen=0.0.0.0</code><br><code># Network settings</code><br><code>network_api_class=nova.network.quantumv2.api.API</code><br><code>quantum_url=http://192.168.0.9:9696</code><br><code>quantum_auth_strategy=keystone</code><br><code>quantum_admin_tenant_name=service</code><br><code>quantum_admin_username=quantum</code><br><code>quantum_admin_password=openstack</code><br><code>quantum_admin_auth_url=http://192.168.0.9:35357/v2.0</code><br><code>libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver</code><br><code>linuxnet_interface_driver=nova.network.linux_net.LinuxOVSInterfaceDriver</code><br><code>firewall_driver=nova.virt.libvirt.firewall.IptablesFirewallDriver</code><br><code># Compute</code><br><code>compute_driver=libvirt.LibvirtDriver</code><br><code># Cinder</code><br><code>volume_api_class=nova.volume.cinder.API</code><br><code>osapi_volume_listen_port=5900</code>  </p>
+
+<p><strong>Restart nova-* services:</strong><br><code>cd /etc/init.d/; for i in $( ls nova-* ); do service $i restart; done</code>  </p>
+
+<p><strong>Check for the smiling faces on nova-* services to confirm your installation:</strong><br><code>nova-manage service list</code>  </p>
 
 <h1>Credits:</h1>
 
@@ -155,10 +165,11 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 </ol>
       </section>
       <footer>
-        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+        <p>Project maintained by <a href="https://github.com/joarder">joarder</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
       </footer>
     </div>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		
+    
   </body>
 </html>

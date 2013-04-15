@@ -73,31 +73,22 @@ This package update is necessary if you want to use process network namespace in
 
 <p><code># The loopback network interface</code><br><code>auto lo</code><br><code>iface lo inet loopback</code>  </p>
 
-<p><code># Management Network Connected to VLAN 10</code><br><code>auto eth0</code><br><code>iface eth0 inet static</code><br><code>address 192.168.0.11</code><br><code>netmask 255.255.255.224</code><br><code>gateway 192.168.0.1</code><br><code>dns-nameservers 4.2.2.1 4.2.2.2</code>  </p>
+<p><code># Management Network (Connected to VLAN 10)</code><br><code>auto eth0</code><br><code>iface eth0 inet static</code><br><code>address 192.168.0.11</code><br><code>netmask 255.255.255.224</code><br><code>gateway 192.168.0.1</code><br><code>dns-nameservers 4.2.2.1 4.2.2.2</code>  </p>
 
 <p><code># VM Configuration Network (Connected to VLAN 101)</code><br><code>auto eth0.101</code><br><code>iface eth0.101 inet static</code><br><code>vlan-raw-device eth0</code><br><code>address 10.0.0.11</code><br><code>netmask 255.255.255.0</code>  </p>
 
 <p><strong>Install and configure NTP</strong><br><code>apt-get install -y ntp</code><br><code>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</code><br><code>service ntp restart</code></p>
 
-<p><strong>Edit /etc/sysctl.conf</strong></p>
+<p><strong>Edit /etc/sysctl.conf</strong><br><code>vi /etc/sysctl.conf</code><br><code>net.ipv4.conf.all.rp_filter = 0</code><br><code>net.ipv4.conf.default.rp_filter = 0</code><br><code>net.ipv4.ip_forward=1</code>  </p>
 
-<p><code>vi /etc/sysctl.conf</code><br><code>net.ipv4.conf.all.rp_filter = 0</code><br><code>net.ipv4.conf.default.rp_filter = 0</code><br><code>net.ipv4.ip_forward=1</code>  </p>
+<p><em>If you do not want to reboot the system then just type</em><br><code>sysctl -p</code>  </p>
 
-<p><em>If you do not want to reboot the system then just type</em></p>
-
-<p><code>sysctl -p</code></p>
-
-<p><strong>Add the below lines to your .bashrc file</strong> </p>
-
-<p><code>vi ~/.bashrc</code></p>
+<p><strong>Add the below lines to your .bashrc file</strong><br><code>vi ~/.bashrc</code>  </p>
 
 <p><code>export OS_TENANT_NAME=ADMIN</code><br><code>export OS_USERNAME=admin</code><br><code>export OS_PASSWORD=openstack</code><br><code>export OS_AUTH_URL="http://192.168.0.9:5000/v2.0/"</code><br><code>export OS_AUTH_STRATEGY=keystone</code><br><code>export SERVICE_TOKEN=ADMIN</code><br><code>export SERVICE_ENDPOINT=http://192.168.0.9:35357/v2.0/</code></p>
 
-<p><strong>Reboot the system</strong></p>
-
-<p>It will be better to reboot the system at this point to make the effects into the configurations</p>
-
-<p><code>reboot</code></p>
+<p><strong>Reboot the system</strong><br>
+It will be better to reboot the system at this point to make the effects into the configurations<br><code>reboot</code></p>
 
 <h3>Install and configure KVM Hypervisor</h3>
 

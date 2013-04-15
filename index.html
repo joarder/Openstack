@@ -101,7 +101,7 @@ This package update is necessary if you want to use process network namespace in
 
 <h3>Install and configure KVM Hypervisor</h3>
 
-<p><strong>Install the required packages</strong><br><code>apt-get install -y kvm libvirt-bin pm-utils</code>  </p>
+<hr><p><strong>Install the required packages</strong><br><code>apt-get install -y kvm libvirt-bin pm-utils</code>  </p>
 
 <p><strong>Configure libvirt</strong><br>
 Edit /etc/libvirt/qemu.conf file and add :<br><code>vi /etc/libvirt/qemu.conf</code><br><code>cgroup_device_acl = [</code><br><code>"/dev/null", "/dev/full", "/dev/zero",</code><br><code>"/dev/random", "/dev/urandom",</code><br><code>"/dev/ptmx", "/dev/kvm", "/dev/kqemu",</code><br><code>"/dev/rtc", "/dev/hpet", "/dev/net/tun"]</code>  </p>
@@ -119,11 +119,11 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <h3>Install and configure OpenVSwitch</h3>
 
-<p><strong>Install the openVSwitch</strong><br><code>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</code>  </p>
+<hr><p><strong>Install the openVSwitch</strong><br><code>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</code>  </p>
 
 <p><strong>Create the bridges (br-int will be used for VM integration)</strong><br><code>ovs-vsctl add-br br-int</code>  </p>
 
-<h3>Install the Quantum openvswitch agent:</h3>
+<h3>Install the Quantum OpenVSwitch agent</h3>
 
 <p><strong>Install the required packages</strong><br><code>apt-get -y install quantum-plugin-openvswitch-agent</code>  </p>
 
@@ -139,7 +139,7 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <h3>Install and configure Nova services</h3>
 
-<p><strong>Install the required packages:</strong><br><code>apt-get install nova-compute-kvm</code>  </p>
+<hr><p><strong>Install the required packages:</strong><br><code>apt-get install nova-compute-kvm</code>  </p>
 
 <p><strong>Now modify authtoken section in the /etc/nova/api-paste.ini file to this:</strong><br><code>vi /etc/nova/api-paste.ini</code><br><code>[filter:authtoken]</code>
 <code>paste.filter_factory = keystone.middleware.auth_token:filter_factory</code>
@@ -151,14 +151,7 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 <code>admin_password = openstack</code>
 <code>signing_dirname = /tmp/keystone-signing-nova</code></p>
 
-<p><strong>Edit /etc/nova/nova-compute.conf file</strong>  </p>
-
-<p><code>vi /etc/nova/nova-compute.conf</code><br><code>[DEFAULT]</code>
-<code>libvirt_type=kvm
-</code>libvirt_ovs_bridge=br-int
-<code>libvirt_vif_type=ethernet
-</code>libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver
-`libvirt_use_virtio_for_bridges=True</p>
+<p><strong>Edit /etc/nova/nova-compute.conf file</strong><br><code>vi /etc/nova/nova-compute.conf</code><br><code>[DEFAULT]</code><br><code>libvirt_type=kvm</code><br><code>libvirt_ovs_bridge=br-int</code><br><code>libvirt_vif_type=ethernet</code><br><code>libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver</code><br><code>libvirt_use_virtio_for_bridges=True</code>  </p>
 
 <p><strong>Modify the /etc/nova/nova.conf like this:</strong><br><code>vi /etc/nova/nova.conf</code>  </p>
 

@@ -133,7 +133,7 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <p><code>#Under the OVS section</code><br><code>[OVS]</code><br><code>tenant_network_type = gre</code><br><code>tunnel_id_ranges = 1:1000</code><br><code>integration_bridge = br-int</code><br><code>tunnel_bridge = br-tun</code><br><code>local_ip = 10.0.0.11</code><br><code>enable_tunneling = True</code>  </p>
 
-<p><strong>Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node:</strong><br><code>vi /etc/quantum/quantum.conf</code><br><code>rabbit_host = 10.0.0.11</code>  </p>
+<p><strong>Make sure that your rabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node:</strong><br><code>vi /etc/quantum/quantum.conf</code><br><code>rabbit_host = 192.168.0.9</code>  </p>
 
 <p><strong>Restart all the services:</strong><br><code>service quantum-plugin-openvswitch-agent restart</code>  </p>
 

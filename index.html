@@ -39,7 +39,9 @@
         <ul></ul>
       </nav>
       <section>
-        <h1>Controller Node Installation</h1>
+        <h1>LAN Switch Configuration</h1>
+
+<h1>Controller Node Installation</h1>
 
 <h2>MySQL Database configurations</h2>
 
@@ -55,9 +57,9 @@
 
 <h1>Network Node Installation</h1>
 
-<h3>Install and configure common services</h3>
+<h2>Install and configure common services</h2>
 
-<hr><p><strong>Install telnet and SSH support for the compute node</strong></p>
+<hr><h3>Install telnet and SSH support for the compute node</h3>
 
 <p><code>apt-get install telnet &amp;&amp; apt-get install openssh-server</code></p>
 
@@ -66,17 +68,17 @@ This package update is necessary if you want to use process network namespace in
 
 <p><code>dpkg -i iproute_20121211-2_amd64.deb</code></p>
 
-<p><strong>Include Cloud Archives for Folsom in the system</strong></p>
+<h3>Include Cloud Archives for Folsom in the system</h3>
 
 <p><code>apt-get install ubuntu-cloud-keyring</code><br><code>vi /etc/apt/sources.list.d/cloud-archive.list</code>  </p>
 
 <p><code>deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/folsom main</code>  </p>
 
-<p><strong>Update the system</strong></p>
+<h3>Update the system</h3>
 
 <p><code>apt-get update &amp;&amp; apt-get dist-upgrade &amp;&amp; apt-get upgrade</code></p>
 
-<p><strong>Install VLAN and Bridge utilities and configure NIC to support multiple networks</strong></p>
+<h3>Install VLAN and Bridge utilities and configure NIC to support multiple networks</h3>
 
 <p><code>apt-get install -y vlan bridge-utils</code><br><code>vi /etc/network/interfaces</code>  </p>
 
@@ -88,27 +90,33 @@ This package update is necessary if you want to use process network namespace in
 
 <p><code># VM internet Access + OpenStack API (Connected to VLAN 102)</code><br><code>auto eth0.102</code><br><code>iface eth0.102 inet manual</code><br><code>vlan-raw-device eth0</code><br><code>up ifconfig $IFACE 0.0.0.0 up</code><br><code>up ip link set $IFACE promisc on</code><br><code>down ip link set $IFACE promisc off</code><br><code>down ifconfig $IFACE down</code>  </p>
 
-<p><strong>Install and configure NTP</strong><br><code>apt-get install -y ntp</code><br><code>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</code><br><code>service ntp restart</code></p>
+<h3>Install and configure NTP</h3>
 
-<p><strong>Edit /etc/sysctl.conf to enable IP forwarding and disable source validation</strong><br><code>vi /etc/sysctl.conf</code>  </p>
+<p><code>apt-get install -y ntp</code><br><code>sed -i 's/server ntp.ubuntu.com/server ntp.ubuntu.com\nserver 127.127.1.0\nfudge 127.127.1.0 stratum 10/g' /etc/ntp.conf</code><br><code>service ntp restart</code></p>
+
+<h3>Edit /etc/sysctl.conf to enable IP forwarding and disable source validation</h3>
+
+<p><code>vi /etc/sysctl.conf</code>  </p>
 
 <p><code>net.ipv4.conf.all.rp_filter = 0</code><br><code>net.ipv4.conf.default.rp_filter = 0</code><br><code>net.ipv4.ip_forward=1</code>  </p>
 
 <p><em>If you do not want to reboot the system then just type</em><br><code>sysctl -p</code>  </p>
 
-<p><strong>Add the below lines to your .bashrc file</strong><br><code>vi ~/.bashrc</code>  </p>
+<h3>Add the below lines to your .bashrc file</h3>
+
+<p><code>vi ~/.bashrc</code>  </p>
 
 <p><code>export OS_TENANT_NAME=ADMIN</code><br><code>export OS_USERNAME=admin</code><br><code>export OS_PASSWORD=openstack</code><br><code>export OS_AUTH_URL="http://192.168.0.9:5000/v2.0/"</code><br><code>export OS_AUTH_STRATEGY=keystone</code><br><code>export SERVICE_TOKEN=ADMIN</code><br><code>export SERVICE_ENDPOINT=http://192.168.0.9:35357/v2.0/</code></p>
 
-<p><strong>Reboot the system</strong><br>
-It will be better to reboot the system at this point to make the effects into the configurations<br><code>reboot</code></p>
+<h3>Reboot the system</h3>
 
-<h3>OpenVSwitch Configuration</h3>
+<p>It will be better to reboot the system at this point to make the effects into the configurations<br><code>reboot</code></p>
+
+<h2>OpenVSwitch Configuration</h2>
 
 <hr><p><strong>Install the required packages</strong><br><code>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</code>  </p>
 
-<p><strong>Create the bridges</strong>
-<code>#br-int will be used for VM integration</code><br><code>ovs-vsctl add-br br-int</code>  </p>
+<p><strong>Create the bridges</strong><br><code>#br-int will be used for VM integration</code><br><code>ovs-vsctl add-br br-int</code>  </p>
 
 <p><code>#br-ex is used to make to VM accessible from the internet</code><br><code>ovs-vsctl add-br br-ex</code><br><code>ovs-vsctl add-port br-ex eth102</code>  </p>
 
@@ -138,8 +146,7 @@ It will be better to reboot the system at this point to make the effects into th
 
 <p><code>rabbit_host = 192.168.0.9</code>  </p>
 
-<p><strong>Restart all the services</strong>
-<code>service quantum-plugin-openvswitch-agent restart</code><br><code>service quantum-dhcp-agent restart</code><br><code>service quantum-l3-agent restart</code>  </p>
+<p><strong>Restart all the services</strong><br><code>service quantum-plugin-openvswitch-agent restart</code><br><code>service quantum-dhcp-agent restart</code><br><code>service quantum-l3-agent restart</code>  </p>
 
 <h1>Compute Node Installation</h1>
 

@@ -39,7 +39,41 @@
         <ul></ul>
       </nav>
       <section>
-        <h1>LAN Switch Configuration</h1>
+        <hr><h1>LAN Switch Configuration (Cisco Catalyst 3750)</h1>
+
+<hr><h3>Enable IP routing</h3>
+
+<p><code>ip routing</code>  </p>
+
+<h3>Interface configuration</h3>
+
+<p><code>interface GigabitEthernet1/0/1</code><br><code>description //Connected to network1-01 (Region One Network Node)</code><br><code>switchport trunk encapsulation dot1q</code><br><code>switchport trunk native vlan 10</code><br><code>switchport trunk allowed vlan 10,101,102</code><br><code>switchport mode trunk</code>  </p>
+
+<p><code>interface GigabitEthernet1/0/2</code><br><code>description //Connected to cn1-01 (Region One Compute Node)</code><br><code>switchport trunk encapsulation dot1q</code><br><code>switchport trunk native vlan 10</code><br><code>switchport trunk allowed vlan 10,101,102</code><br><code>switchport mode trunk</code>  </p>
+
+<p><code>interface GigabitEthernet1/0/11</code><br><code>description //Connected to controller1-01 (Region One Controller Node)</code><br><code>switchport trunk encapsulation dot1q</code><br><code>switchport trunk native vlan 10</code><br><code>switchport trunk allowed vlan 10,101,102</code><br><code>switchport mode trunk</code>  </p>
+
+<p><code>interface GigabitEthernet1/0/12</code><br><code>description //Connected to Internet</code><br><code>no switchport</code><br><code>ip address 192.168.0.65 255.255.255.252</code>  </p>
+
+<h3>VLAN creation</h3>
+
+<p><code>vlan 10</code><br><code>name MGT_VLAN_R01</code>  </p>
+
+<p><code>vlan 101</code><br><code>name DATA_VLAN_R01</code>  </p>
+
+<p><code>vlan 102</code><br><code>name PUBLIC_API_VLAN_R01</code>  </p>
+
+<h3>VLAN interface configuration</h3>
+
+<p><code>interface Vlan10</code><br><code>description //Management network for Physical Machines under Region One</code><br><code>ip address 192.168.0.1 255.255.255.224</code>  </p>
+
+<p><code>interface Vlan101</code><br><code>description //Internal data network for VM instances under Region One</code><br><code>ip address 10.0.0.1 255.255.255.0</code>  </p>
+
+<p><code>interface Vlan102</code><br><code>description //Public/API network for VM instances under Region One</code><br><code>ip address 192.168.0.129 255.255.255.192</code>  </p>
+
+<h3>Configure default routing towards Internet gateway</h3>
+
+<p><code>ip route 0.0.0.0 0.0.0.0 192.168.0.66</code>  </p>
 
 <h1>Controller Node Installation</h1>
 

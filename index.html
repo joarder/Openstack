@@ -271,15 +271,17 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <p><strong>Restart libvirt</strong><br><code>service libvirt-bin restart</code>  </p>
 
-<h3>Install and configure OpenVSwitch</h3>
+<h2>Install and configure OpenVSwitch</h2>
 
-<hr><p><strong>Install the openVSwitch</strong><br><code>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</code>  </p>
+<hr><h3>Install the openVSwitch</h3>
+
+<p><code>apt-get install -y openvswitch-switch openvswitch-datapath-dkms</code>  </p>
 
 <p><strong>Create the bridges (br-int will be used for VM integration)</strong><br><code>ovs-vsctl add-br br-int</code>  </p>
 
-<h3>Install the Quantum OpenVSwitch agent</h3>
+<h2>Install the Quantum OpenVSwitch agent</h2>
 
-<p><strong>Install the required packages</strong><br><code>apt-get -y install quantum-plugin-openvswitch-agent</code>  </p>
+<hr><p><strong>Install the required packages</strong><br><code>apt-get -y install quantum-plugin-openvswitch-agent</code>  </p>
 
 <p><strong>Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini with:</strong><br><code>vi /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini</code>  </p>
 
@@ -293,11 +295,11 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <p><strong>Restart all the services:</strong><br><code>service quantum-plugin-openvswitch-agent restart</code>  </p>
 
-<h3>Install and configure Nova services</h3>
+<h2>Install and configure Nova services</h2>
 
-<hr><p><strong>Install the required packages:</strong><br><code>apt-get install nova-compute-kvm</code>  </p>
+<hr><p><strong>Install the required packages</strong><br><code>apt-get install nova-compute-kvm</code>  </p>
 
-<p><strong>Now modify authtoken section in the /etc/nova/api-paste.ini file to this:</strong><br><code>vi /etc/nova/api-paste.ini</code>  </p>
+<p><strong>Now modify authtoken section in the /etc/nova/api-paste.ini file</strong><br><code>vi /etc/nova/api-paste.ini</code>  </p>
 
 <p><code>[filter:authtoken]</code><br><code>paste.filter_factory = keystone.middleware.auth_token:filter_factory</code><br><code>auth_host = 192.168.0.9</code><br><code>auth_port = 35357</code><br><code>auth_protocol = http</code><br><code>admin_tenant_name = service</code><br><code>admin_user = nova</code><br><code>admin_password = openstack</code><br><code>signing_dirname = /tmp/keystone-signing-nova</code>  </p>
 
@@ -305,9 +307,9 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <p><code>[DEFAULT]</code><br><code>libvirt_type=kvm</code><br><code>libvirt_ovs_bridge=br-int</code><br><code>libvirt_vif_type=ethernet</code><br><code>libvirt_vif_driver=nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver</code><br><code>libvirt_use_virtio_for_bridges=True</code>  </p>
 
-<p><strong>Modify the /etc/nova/nova.conf like this:</strong><br><code>vi /etc/nova/nova.conf</code>  </p>
-
-<p><code>[DEFAULT]</code><br><code>logdir=/var/log/nova</code><br><code>state_path=/var/lib/nova</code><br><code>lock_path=/run/lock/nova</code><br><code>verbose=True</code><br><code>api_paste_config=/etc/nova/api-paste.ini</code><br><code>scheduler_driver=nova.scheduler.simple.SimpleScheduler</code><br><code>s3_host=192.168.0.9</code><br><code>ec2_host=192.168.0.9</code><br><code>ec2_dmz_host=192.168.0.9</code><br><code>rabbit_host=192.168.0.9</code><br><code>cc_host=192.168.0.9</code><br><code>dmz_cidr=169.254.169.254/32</code><br><code>metadata_host=192.168.0.9</code><br><code>metadata_listen=0.0.0.0</code><br><code>nova_url=http://192.168.0.9:8774/v1.1/</code><br><code>sql_connection=mysql://nova:openstack@192.168.0.9/nova</code><br><code>ec2_url=http://192.168.0.9:8773/services/Cloud</code><br><code>root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf</code>  </p>
+<p><strong>Modify the /etc/nova/nova.conf</strong><br><code>vi /etc/nova/nova.conf</code><br>
+Delete the default contents of nova.conf<br><code>dG</code><br>
+Then add the below configurations<br><code>[DEFAULT]</code><br><code>logdir=/var/log/nova</code><br><code>state_path=/var/lib/nova</code><br><code>lock_path=/run/lock/nova</code><br><code>verbose=True</code><br><code>api_paste_config=/etc/nova/api-paste.ini</code><br><code>scheduler_driver=nova.scheduler.simple.SimpleScheduler</code><br><code>s3_host=192.168.0.9</code><br><code>ec2_host=192.168.0.9</code><br><code>ec2_dmz_host=192.168.0.9</code><br><code>rabbit_host=192.168.0.9</code><br><code>cc_host=192.168.0.9</code><br><code>dmz_cidr=169.254.169.254/32</code><br><code>metadata_host=192.168.0.9</code><br><code>metadata_listen=0.0.0.0</code><br><code>nova_url=http://192.168.0.9:8774/v1.1/</code><br><code>sql_connection=mysql://nova:openstack@192.168.0.9/nova</code><br><code>ec2_url=http://192.168.0.9:8773/services/Cloud</code><br><code>root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf</code>  </p>
 
 <p><code># Authentication</code><br><code>use_deprecated_auth=false</code><br><code>auth_strategy=keystone</code><br><code>keystone_ec2_url=http://192.168.0.9:5000/v2.0/ec2tokens</code>  </p>
 
@@ -321,16 +323,17 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <p><code># Cinder</code><br><code>volume_api_class=nova.volume.cinder.API</code><br><code>osapi_volume_listen_port=5900</code>  </p>
 
-<p><strong>Restart nova-* services:</strong><br><code>cd /etc/init.d/; for i in $( ls nova-* ); do service $i restart; done</code>  </p>
+<p><strong>Restart nova-* services<br><code>cd /etc/init.d/; for i in $( ls nova-* ); do service $i restart; done</code></strong>  </p>
 
-<p><strong>Check for the smiling faces on nova-* services to confirm your installation:</strong><br><code>nova-manage service list</code>  </p>
+<p><strong>Check for the smiling faces on nova-* services to confirm your installation</strong><br><code>nova-manage service list</code>  </p>
 
-<h1>Credits:</h1>
+<h1>Credits</h1>
 
 <ol>
 <li><a href="http://docs.openstack.org/folsom/basic-install/content/">Official Guide: Basic Installation Guide for Ubuntu 12.04/12.10 (Folsom)</a></li>
 <li><a href="http://docwiki.cisco.com/wiki/Cisco_OpenStack_Edition:_Folsom_Manual_Install">Cisco OpenStack Edition: Folsom Manual Install</a></li>
-<li><a href="https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/OpenStack_Folsom_Install_Guide_WebVersion.rst">Folsom + Quantum on GRE-Tunneling with 3 NIC</a></li>
+<li>
+<a href="https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/stable/GRE/OpenStack_Folsom_Install_Guide_WebVersion.rst">Folsom + Quantum on GRE-Tunneling with 3 NIC</a> by Bilel Msekni</li>
 </ol>
       </section>
       <footer>

@@ -120,58 +120,73 @@ This package update is necessary if you want to use process network namespace in
 
 <p><code>#br-ex is used to make to VM accessible from the internet</code><br><code>ovs-vsctl add-br br-ex</code><br><code>ovs-vsctl add-port br-ex eth102</code>  </p>
 
-<h3>Quantum Configuration</h3>
+<h2>Quantum Configuration</h2>
 
-<hr><p><strong>Install the Quantum openvswitch agent, l3 agent and dhcp agent</strong><br><code>apt-get -y install quantum-plugin-openvswitch-agent quantum-dhcp-agent quantum-l3-agent</code>  </p>
+<hr><h3>nstall the Quantum openvswitch agent, l3 agent and dhcp agent</h3>
 
-<p><strong>Edit /etc/quantum/api-paste.ini</strong><br><code>vi /etc/quantum/api-paste.ini</code>  </p>
+<p><code>apt-get -y install quantum-plugin-openvswitch-agent quantum-dhcp-agent quantum-l3-agent</code>  </p>
+
+<h3>Edit /etc/quantum/api-paste.ini**</h3>
+
+<p><code>vi /etc/quantum/api-paste.ini</code>  </p>
 
 <p><code>[filter:authtoken]</code><br><code>paste.filter_factory = keystone.middleware.auth_token:filter_factory</code><br><code>auth_host = 192.168.0.9</code><br><code>auth_port = 35357</code><br><code>auth_protocol = http</code><br><code>admin_tenant_name = service</code><br><code>admin_user = quantum</code><br><code>admin_password = openstack</code>  </p>
 
-<p><strong>Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini</strong><br><code>vi /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini</code>  </p>
+<h3>Edit the OVS plugin configuration file /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini</h3>
+
+<p><code>vi /etc/quantum/plugins/openvswitch/ovs_quantum_plugin.ini</code>  </p>
 
 <p><code>#Under the database section</code><br><code>[DATABASE]</code><br><code>sql_connection = mysql://quantum:openstack@192.168.0.9/quantum</code>  </p>
 
 <p><code>#Under the OVS section</code><br><code>[OVS]</code><br><code>tenant_network_type = gre</code><br><code>tunnel_id_ranges = 1:1000</code><br><code>integration_bridge = br-int</code><br><code>tunnel_bridge = br-tun</code><br><code>local_ip = 10.0.0.10</code><br><code>enable_tunneling = True</code>  </p>
 
-<p><strong>In addition, update the /etc/quantum/l3_agent.ini</strong><br><code>vi /etc/quantum/l3_agent.ini</code>  </p>
+<h3>In addition, update the /etc/quantum/l3_agent.ini</h3>
+
+<p><code>vi /etc/quantum/l3_agent.ini</code>  </p>
 
 <p><code>auth_url = http://192.168.0.9:35357/v2.0</code><br><code>auth_region = RegionOne</code><br><code>admin_tenant_name = service</code><br><code>admin_user = quantum</code><br><code>admin_password = openstack</code><br><code>metadata_ip = 192.168.0.130</code><br><code>metadata_port = 8775</code><br><code>use_namespaces = False</code>  </p>
 
-<p><strong>Edit /etc/quantum/dhcp_agent.ini</strong><br><code>vi /etc/quantum/dhcp_agent.ini</code>  </p>
+<h3>Edit /etc/quantum/dhcp_agent.ini**</h3>
+
+<p><code>vi /etc/quantum/dhcp_agent.ini</code>  </p>
 
 <p><code>use_namespaces = False</code>  </p>
 
-<p><strong>Make sure that your RabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node</strong><br><code>vi /etc/quantum/quantum.conf</code>  </p>
+<h3>Make sure that your RabbitMQ IP in /etc/quantum/quantum.conf is set to the controller node</h3>
+
+<p><code>vi /etc/quantum/quantum.conf</code>  </p>
 
 <p><code>rabbit_host = 192.168.0.9</code>  </p>
 
-<p><strong>Restart all the services</strong><br><code>service quantum-plugin-openvswitch-agent restart</code><br><code>service quantum-dhcp-agent restart</code><br><code>service quantum-l3-agent restart</code>  </p>
+<h3>Restart all the services</h3>
+
+<p><code>service quantum-plugin-openvswitch-agent restart</code><br><code>service quantum-dhcp-agent restart</code><br><code>service quantum-l3-agent restart</code>  </p>
 
 <h1>Compute Node Installation</h1>
 
-<h3>Install and configure common services</h3>
+<h2>Install and configure common services</h2>
 
-<hr><p><strong>Install telnet and SSH support for the compute node</strong></p>
+<hr><h3>Install telnet and SSH support for the compute node</h3>
 
 <p><code>apt-get install telnet &amp;&amp; apt-get install openssh-server</code></p>
 
-<p><strong>Upload the latest iproute package and install it using dpkg</strong><br>
-This package update is necessary if you want to use process network namespace in future for your quantum configuration</p>
+<h3>Upload the latest iproute package and install it using dpkg</h3>
+
+<p>This package update is necessary if you want to use process network namespace in future for your quantum configuration</p>
 
 <p><code>dpkg -i iproute_20121211-2_amd64.deb</code></p>
 
-<p><strong>Include Cloud Archives for Folsom in the system</strong></p>
+<h3>Include Cloud Archives for Folsom in the system</h3>
 
 <p><code>apt-get install ubuntu-cloud-keyring</code><br><code>vi /etc/apt/sources.list.d/cloud-archive.list</code>  </p>
 
 <p><code>deb http://ubuntu-cloud.archive.canonical.com/ubuntu precise-updates/folsom main</code>  </p>
 
-<p><strong>Update the system</strong></p>
+<h3>Update the system</h3>
 
 <p><code>apt-get update &amp;&amp; apt-get dist-upgrade &amp;&amp; apt-get upgrade</code></p>
 
-<p><strong>Install VLAN and Bridge utilities and configure NIC to support multiple networks</strong></p>
+<h3>Install VLAN and Bridge utilities and configure NIC to support multiple networks</h3>
 
 <p><code>apt-get install -y vlan bridge-utils</code><br><code>vi /etc/network/interfaces</code>  </p>
 

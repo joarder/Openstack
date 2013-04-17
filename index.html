@@ -154,7 +154,7 @@ This package update is necessary if you want to use process network namespace in
 
 <p><code>#br-ex is used to make to VM accessible from the internet</code><br><code>ovs-vsctl add-br br-ex</code><br><code>ovs-vsctl add-port br-ex eth102</code>  </p>
 
-<h2>Quantum Configuration</h2>
+<h2>Quantum OpenVSwitch, L3 and DHCP Agent Configuration</h2>
 
 <hr><h3>nstall the Quantum openvswitch agent, l3 agent and dhcp agent</h3>
 
@@ -245,7 +245,7 @@ This package update is necessary if you want to use process network namespace in
 <p><strong>Reboot the system</strong><br>
 It will be better to reboot the system at this point to make the effects into the configurations<br><code>reboot</code></p>
 
-<h3>Install and configure KVM Hypervisor</h3>
+<h3>KVM Hypervisor Configuration</h3>
 
 <hr><p><strong>Install the required packages</strong><br><code>apt-get install -y kvm libvirt-bin pm-utils</code>  </p>
 
@@ -271,7 +271,7 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <p><strong>Restart libvirt</strong><br><code>service libvirt-bin restart</code>  </p>
 
-<h2>Install and configure OpenVSwitch</h2>
+<h2>OpenVSwitch Configuration</h2>
 
 <hr><h3>Install the openVSwitch</h3>
 
@@ -279,7 +279,7 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <p><strong>Create the bridges (br-int will be used for VM integration)</strong><br><code>ovs-vsctl add-br br-int</code>  </p>
 
-<h2>Install the Quantum OpenVSwitch agent</h2>
+<h2>Quantum OpenVSwitch Agent Configuration</h2>
 
 <hr><p><strong>Install the required packages</strong><br><code>apt-get -y install quantum-plugin-openvswitch-agent</code>  </p>
 
@@ -295,7 +295,7 @@ Edit /etc/libvirt/libvirtd.conf file :<br><code>vi /etc/libvirt/libvirtd.conf</c
 
 <p><strong>Restart all the services:</strong><br><code>service quantum-plugin-openvswitch-agent restart</code>  </p>
 
-<h2>Install and configure Nova services</h2>
+<h2>Nova Services Configuration</h2>
 
 <hr><p><strong>Install the required packages</strong><br><code>apt-get install nova-compute-kvm</code>  </p>
 
